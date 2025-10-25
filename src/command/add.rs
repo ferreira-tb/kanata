@@ -26,8 +26,9 @@ impl Command for Add {
       bail!("Missing file name");
     };
 
-    let target = kanata_dir().join(name);
-    fs::copy(self.path, target).await?;
+    let dir = kanata_dir();
+    fs::create_dir_all(&dir).await?;
+    fs::copy(self.path, dir.join(name)).await?;
 
     Ok(())
   }

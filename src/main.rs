@@ -11,6 +11,7 @@ use command::Command;
 #[command(version, about, long_about = None)]
 enum Cli {
   Add(command::Add),
+  Clear(command::Clear),
   List(command::List),
   Open(command::Open),
   Serve(command::Serve),
@@ -20,6 +21,7 @@ enum Cli {
 async fn main() -> Result<()> {
   match Cli::parse() {
     Cli::Add(cmd) => cmd.execute().await,
+    Cli::Clear(cmd) => cmd.execute().await,
     Cli::List(cmd) => cmd.execute().await,
     Cli::Open(cmd) => cmd.execute().await,
     Cli::Serve(cmd) => cmd.execute().await,
