@@ -23,7 +23,7 @@ impl Command for Add {
         .and_then(OsStr::to_str)
         .map(ToOwned::to_owned)
     }) else {
-      bail!("missing file name");
+      bail!("Missing file name");
     };
 
     let target = kanata_dir().join(name);

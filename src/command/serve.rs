@@ -8,11 +8,15 @@ use axum::routing::get;
 use clap::Args;
 use http::StatusCode;
 use maud::html;
+use std::net::{Ipv4Addr, SocketAddrV4};
 use tokio::fs;
 use tokio::net::TcpListener;
 
 #[derive(Args, Debug)]
-pub struct Serve;
+pub struct Serve {
+  #[arg(long)]
+  port: Option<u16>,
+}
 
 impl Command for Serve {
   async fn execute(self) -> Result<()> {
@@ -20,7 +24,12 @@ impl Command for Serve {
       .route("/", get(home))
       .route("/download/{name}", get(download));
 
-    let listener = TcpListener::bind("0.0.0.0:63000").await?;
+    let ip = Ipv4Addr::new(0, 0, 0, 0);
+    let port = self.port.unwrap_or(63000);
+    let addr = SocketAddrV4::new(ip, port);
+    println!("Listening on: {addr}");
+
+    let listener = TcpListener::bind(addr).await?;
     axum::serve(listener, router.into_make_service()).await?;
 
     Ok(())
