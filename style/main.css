@@ -1,0 +1,18 @@
+*,
+::after,
+::before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0 solid;
+}
+
+body {
+  line-height: 1.5;
+  padding: 10px;
+}
+
+ul {
+  font-size: 20px;
+  list-style: none;
+}

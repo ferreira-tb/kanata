@@ -7,7 +7,7 @@ use axum::response::{IntoResponse, Response};
 use axum::routing::get;
 use clap::Args;
 use http::StatusCode;
-use maud::html;
+use maud::{DOCTYPE, html};
 use std::net::{Ipv4Addr, SocketAddrV4};
 use tokio::fs;
 use tokio::net::TcpListener;
@@ -42,11 +42,22 @@ async fn home() -> Response {
   };
 
   let html = html! {
-    ol {
-      @for item in &items {
-        ul {
-          @let url = format!("/download/{}", item.encode());
-          a href=(url) { (item.name()) }
+    (DOCTYPE)
+    html lang="en" {
+      head {
+        meta charset="utf-8";
+        meta name="viewport" content="width=device-width, initial-scale=1.0";
+        style { (include_str!("../../style/main.css")) }
+        title { "Kanata" }
+      }
+      body {
+        ol {
+          @for item in &items {
+            ul {
+              @let url = format!("/download/{}", item.encode());
+              a href=(url) { (item.name()) }
+            }
+          }
         }
       }
     }
