@@ -1,0 +1,47 @@
+[package]
+name = "kanata"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.92"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+anyhow = "1.0"
+axum = { version = "0.8", optional = true }
+clap = { version = "4.5", features = ["derive"], optional = true }
+console_error_panic_hook = { version = "0.1", optional = true }
+leptos = { version = "0.8", features = ["nightly"] }
+leptos_axum = { version = "0.8", optional = true }
+leptos_meta = { version = "0.8" }
+leptos_router = { version = "0.8", features = ["nightly"] }
+tokio = { version = "1", features = ["full"], optional = true }
+wasm-bindgen = { version = "0.2", optional = true }
+
+[features]
+hydrate = ["dep:console_error_panic_hook", "dep:wasm-bindgen", "leptos/hydrate"]
+ssr = ["dep:axum", "dep:clap", "dep:leptos_axum", "dep:tokio", "leptos/ssr", "leptos_meta/ssr", "leptos_router/ssr"]
+
+[profile.wasm-release]
+inherits = "release"
+opt-level = 'z'
+lto = true
+codegen-units = 1
+panic = "abort"
+
+[package.metadata.leptos]
+output-name = "kanata"
+site-root = "target/site"
+site-pkg-dir = "pkg"
+style-file = "style/main.css"
+site-addr = "127.0.0.1:3000"
+reload-port = 3001
+browserquery = "defaults"
+env = "DEV"
+
+bin-features = ["ssr"]
+bin-default-features = false
+lib-features = ["hydrate"]
+lib-default-features = false
+lib-profile-release = "wasm-release"
