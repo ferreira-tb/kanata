@@ -11,7 +11,7 @@ impl Command for Clear {
   async fn execute(self) -> Result<()> {
     let dir = kanata_dir();
     if fs::try_exists(&dir).await? {
-      fs::remove_dir(dir).await?;
+      fs::remove_dir_all(dir).await?;
     }
 
     Ok(())
