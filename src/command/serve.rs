@@ -7,8 +7,9 @@ use axum::response::{IntoResponse, Response};
 use axum::routing::get;
 use clap::Args;
 use http::StatusCode;
+use local_ip_address::local_ip;
 use maud::{DOCTYPE, html};
-use std::net::{Ipv4Addr, SocketAddrV4};
+use std::net::{IpAddr, Ipv4Addr, SocketAddrV4};
 use tokio::fs;
 use tokio::net::TcpListener;
 
@@ -27,7 +28,9 @@ impl Command for Serve {
     let ip = Ipv4Addr::new(0, 0, 0, 0);
     let port = self.port.unwrap_or(63000);
     let addr = SocketAddrV4::new(ip, port);
-    println!("Listening on: {addr}");
+
+    let IpAddr::V4(local) = local_ip()? else { unreachable!() };
+    println!("Listening on: {local}:{port}");
 
     let listener = TcpListener::bind(addr).await?;
     axum::serve(listener, router.into_make_service()).await?;
