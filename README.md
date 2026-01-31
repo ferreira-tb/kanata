@@ -1,5 +1,5 @@
 # kanata
 
 ```sh
-cargo +nightly install --path .
+cargo +nightly install kanata-cli
 ```
