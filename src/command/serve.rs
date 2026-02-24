@@ -9,6 +9,8 @@ use clap::Args;
 use http::StatusCode;
 use local_ip_address::local_ip;
 use maud::{DOCTYPE, html};
+use qrcode::QrCode;
+use qrcode::render::unicode;
 use std::net::{IpAddr, Ipv4Addr, SocketAddrV4};
 use tokio::fs;
 use tokio::net::TcpListener;
@@ -29,8 +31,16 @@ impl Command for Serve {
     let port = self.port.unwrap_or(63000);
     let addr = SocketAddrV4::new(ip, port);
 
-    let IpAddr::V4(local) = local_ip()? else { unreachable!() };
-    println!("Listening on: {local}:{port}");
+    if let IpAddr::V4(local) = local_ip()? {
+      let url = format!("http://{local}:{port}");
+      let qr_code = QrCode::new(url.as_bytes())?
+        .render::<unicode::Dense1x2>()
+        .dark_color(unicode::Dense1x2::Light)
+        .light_color(unicode::Dense1x2::Dark)
+        .build();
+
+      println!("{qr_code}\n{url}");
+    };
 
     let listener = TcpListener::bind(addr).await?;
     axum::serve(listener, router.into_make_service()).await?;
