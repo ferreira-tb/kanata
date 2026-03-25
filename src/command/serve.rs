@@ -19,6 +19,9 @@ use tokio::net::TcpListener;
 pub struct Serve {
   #[arg(long)]
   port: Option<u16>,
+
+  #[arg(long)]
+  qr: bool,
 }
 
 impl Command for Serve {
@@ -33,13 +36,19 @@ impl Command for Serve {
 
     if let IpAddr::V4(local) = local_ip()? {
       let url = format!("http://{local}:{port}");
-      let qr_code = QrCode::new(url.as_bytes())?
-        .render::<unicode::Dense1x2>()
-        .dark_color(unicode::Dense1x2::Light)
-        .light_color(unicode::Dense1x2::Dark)
-        .build();
+      let message = if self.qr {
+        let qr_code = QrCode::new(url.as_bytes())?
+          .render::<unicode::Dense1x2>()
+          .dark_color(unicode::Dense1x2::Light)
+          .light_color(unicode::Dense1x2::Dark)
+          .build();
 
-      println!("{qr_code}\n{url}");
+        format!("{qr_code}\n{url}")
+      } else {
+        format!("Serving on {url}")
+      };
+
+      println!("{message}");
     };
 
     let listener = TcpListener::bind(addr).await?;
