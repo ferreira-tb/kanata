@@ -1,5 +1,5 @@
 # kanata
 
 ```sh
-cargo +nightly install kanata-cli
+cargo +nightly install --git https://github.com/ferreira-tb/kanata
 ```

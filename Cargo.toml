@@ -1,6 +1,6 @@
 [package]
 name = "kanata-cli"
-version = "1.0.0"
+version = "1.0.1"
 description = "Share local files"
 homepage = "https://github.com/ferreira-tb/kanata"
 repository = "https://github.com/ferreira-tb/kanata"
@@ -37,7 +37,7 @@ version = "5.3"
 features = ["shellexecute-on-windows"]
 
 [dependencies.tokio]
-version = "1.51"
+version = "1.52"
 features = ["full"]
 
 [profile.release]
